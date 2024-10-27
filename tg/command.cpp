@@ -46,7 +46,7 @@ void onUpdateAuthorizationState::operator()(const char *msg_cstr) const
     }
     else if (authorization_state["@type"] == "authorizationStateWaitPhoneNumber")
     {
-        std::cout << "wait your phone number..." << std::endl;
+        std::cout << "wait your phone number.." << std::endl;
         std::string phone_number;
         std::cin >> phone_number;
         json data = {
@@ -60,7 +60,7 @@ void onUpdateAuthorizationState::operator()(const char *msg_cstr) const
     }
     else if (authorization_state["@type"] == "authorizationStateWaitEmailAddress")
     {
-        std::cout << "wait your email address..." << std::endl;
+        std::cout << "wait your email address.." << std::endl;
         std::string email_address;
         std::cin >> email_address;
         json data = {
@@ -74,7 +74,7 @@ void onUpdateAuthorizationState::operator()(const char *msg_cstr) const
     }
     else if (authorization_state["@type"] == "authorizationStateWaitEmailCode")
     {
-        std::cout << "Enter email code..." << std::endl;
+        std::cout << "Enter email code.." << std::endl;
         std::string code;
         std::cin >> code;
         json data = {
@@ -94,7 +94,7 @@ void onUpdateAuthorizationState::operator()(const char *msg_cstr) const
     }
     else if (authorization_state["@type"] == "authorizationStateWaitCode")
     {
-        std::cout << "Enter (SMS) code..." << std::endl;
+        std::cout << "Enter (SMS) code.." << std::endl;
         std::string code;
         std::cin >> code;
         json data = {
@@ -108,10 +108,10 @@ void onUpdateAuthorizationState::operator()(const char *msg_cstr) const
     }
     else if (authorization_state["@type"] == "authorizationStateWaitCode")
     {
-        std::cout << "Register new account,\n enter first name..." << std::endl;
+        std::cout << "Register new account,\n enter first name.." << std::endl;
         std::string first_name;
         std::cin >> first_name;
-        std::cout << "last name..." << std::endl;
+        std::cout << "last name.." << std::endl;
         std::string last_name;
         std::cin >> last_name;
         json data = {
@@ -126,7 +126,7 @@ void onUpdateAuthorizationState::operator()(const char *msg_cstr) const
     }
     else if (authorization_state["@type"] == "authorizationStateWaitPassword")
     {
-        std::cout << "Enter password..." << std::endl;
+        std::cout << "Enter password.." << std::endl;
         std::string password;
         std::cin >> password;
         json data = {

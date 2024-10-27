@@ -24,6 +24,7 @@ int main()
     for (int i = 0; i < 1; i++)
     {
         auto client = std::make_shared<tiko>();
+        client->register_process();
         clients.emplace(client->get_client_id(), std::move(client));
     }
 

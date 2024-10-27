@@ -10,11 +10,15 @@ tiko::tiko()
 {
     client_id_ = td_create_client_id();
 
-    // command register
-    convention_["updateAuthorizationState"] = onUpdateAuthorizationState(shared_from_this());
-
     // start the client by sending request to it
     td_send(client_id_, R"({"@type":"getOption", "name":"version"})");
+}
+
+void tiko::register_process()
+{
+    // command register
+    convention_["updateAuthorizationState"] = onUpdateAuthorizationState(shared_from_this());
+    return;
 }
 
 void tiko::set_authorized(bool authorized)

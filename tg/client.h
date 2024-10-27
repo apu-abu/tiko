@@ -17,6 +17,7 @@ public:
     void set_logout(bool logout);
     void send(const char *cmd);
     void receive(const char *update);
+    void register_process();
     std::int64_t set_respond(std::unique_ptr<respond> rspd);
 
 private:
