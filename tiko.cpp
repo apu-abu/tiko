@@ -19,7 +19,7 @@ using json = nlohmann::json;
 int main()
 {
     // disable TDLib logging
-    td_execute("{\"@type\":\"setLogVerbosityLevel\", \"new_verbosity_level\":0}");
+    td_execute("{\"@type\":\"setLogVerbosityLevel\", \"new_verbosity_level\":4}");
     std::map<int, std::shared_ptr<tiko>> clients;
     for (int i = 0; i < 1; i++)
     {
