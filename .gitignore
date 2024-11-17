@@ -1,2 +1,9 @@
 .vscode
 build
+bin
+storage
+logs
+*.sh
+*.log
+.DS_Store
+

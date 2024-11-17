@@ -1,9 +1,4 @@
-//
-// Copyright Aliaksei Levin (levlam@telegram.org), Arseny Smirnov (arseny30@gmail.com) 2014-2024
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
+#include <filesystem>
 #include <iostream>
 #include <memory>
 
@@ -11,22 +6,39 @@
 #include <nlohmann/json.hpp>
 
 #include "tg/client.h"
+#include "tg/routine.h"
+#include "utils/logger.h"
 
 // Basic example of TDLib JSON interface usage.
 // Native interface should be preferred instead in C++, so here is only an example of
 // the main event cycle, which should be essentially the same for all languages.
 using json = nlohmann::json;
-int main()
+int main(int argc, char *argv[])
 {
-    // disable TDLib logging
-    td_execute("{\"@type\":\"setLogVerbosityLevel\", \"new_verbosity_level\":0}");
-    std::map<int, std::shared_ptr<tiko>> clients;
-    for (int i = 0; i < 1; i++)
+    // set logger for tiko
+    logger::init_rotated_logger("tiko");
+    logger::set_log_level(logger::level_enum::trace_level);
+    logger::flush_every(std::chrono::seconds(1));
+
+    std::string path = "storage";
+    std::map<int, std::shared_ptr<Tiko>> clients;
+    int client_nums = 0;
+    for (const auto &entry : std::filesystem::directory_iterator(path))
     {
-        auto client = std::make_shared<tiko>();
+        auto telephone = entry.path().filename().string();
+        auto client = std::make_shared<Tiko>(telephone);
         clients.emplace(client->get_client_id(), std::move(client));
+        client_nums++;
     }
 
+    if (client_nums == 0)
+    {
+        logger::error("key\3{}\2msg\3{}", "storage_is_empty", "");
+        std::exit(-1);
+    }
+
+    // disable TDLib logging
+    td_execute("{\"@type\":\"setLogVerbosityLevel\", \"new_verbosity_level\":0}");
     const double WAIT_TIMEOUT = 10.0; // seconds
     while (true)
     {
@@ -38,6 +50,10 @@ int main()
             if (rsp.contains("@client_id"))
             {
                 clients[rsp["@client_id"]]->receive(result);
+            }
+            else
+            {
+                logger::info("ket\3{}\2msg\3{}", "msg_with_no_client", result);
             }
         }
     }

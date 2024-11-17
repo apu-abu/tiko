@@ -9,9 +9,19 @@
             std::terminate();                                                  \
         }                                                                      \
     } while (false)
+#define PANIC(message)                     \
+    do                                     \
+    {                                      \
+        std::cerr << message << std::endl; \
+        std::abort();                      \
+    } while (false)
 #else
 #define ASSERT(condition, message) \
     do                             \
     {                              \
+    } while (false)
+#define PANIC(message) \
+    do                 \
+    {                  \
     } while (false)
 #endif
