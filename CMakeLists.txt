@@ -26,12 +26,22 @@ FetchContent_Declare(cli11
     GIT_TAG v2.4.2
 )
 
-FetchContent_MakeAvailable(Td spdlog nlohmann_json httplib cli11)
+FetchContent_Declare(mpmcq
+    GIT_REPOSITORY https://github.com/rigtorp/MPMCQueue.git
+)
+
+FetchContent_Declare(pqxx
+    GIT_REPOSITORY https://github.com/jtv/libpqxx.git
+    GIT_TAG 7.9.2
+)
+
+FetchContent_MakeAvailable(Td spdlog nlohmann_json httplib cli11 mpmcq pqxx)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
 add_executable(tiko tiko.cpp)
-add_executable(tgen tgen.cpp)
+add_executable(tgen register.cpp)
+add_executable(tie register.cpp)
 
 add_subdirectory(tg)
 add_subdirectory(diverse)
@@ -39,9 +49,17 @@ add_subdirectory(utils)
 
 target_link_libraries(tiko PRIVATE Td::TdJsonStatic)
 target_link_libraries(tiko PRIVATE nlohmann_json)
-target_link_libraries(tiko PRIVATE "$<LINK_LIBRARY:WHOLE_ARCHIVE,tg_manual>")
+target_link_libraries(tiko PRIVATE "$<LINK_LIBRARY:WHOLE_ARCHIVE,tg>")
 target_link_libraries(tiko PRIVATE utils)
 target_link_libraries(tiko PRIVATE spdlog)
+target_link_libraries(tiko PRIVATE MPMCQueue)
+
+target_link_libraries(tie PRIVATE Td::TdJsonStatic)
+target_link_libraries(tie PRIVATE nlohmann_json)
+target_link_libraries(tie PRIVATE CLI11::CLI11)
+target_link_libraries(tie PRIVATE "$<LINK_LIBRARY:WHOLE_ARCHIVE,tg_manual>")
+target_link_libraries(tie PRIVATE utils)
+target_link_libraries(tie PRIVATE spdlog)
 
 target_link_libraries(tgen PRIVATE Td::TdJsonStatic)
 target_link_libraries(tgen PRIVATE nlohmann_json)
@@ -52,3 +70,4 @@ target_link_libraries(tgen PRIVATE spdlog)
 
 set_property(TARGET tiko PROPERTY CXX_STANDARD 20)
 set_property(TARGET tgen PROPERTY CXX_STANDARD 20)
+set_property(TARGET tie PROPERTY CXX_STANDARD 20)

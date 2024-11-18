@@ -1,17 +1,17 @@
 #include <iostream>
 
-#include "diverse/authorize.h"
+#include "authorize.h"
+
+#include "utils/assert.h"
 
 void get_password(const std::string phone_number, std::string &password)
 {
-    std::cout << "Enter password.." << std::endl;
-    std::cin >> password;
+    PANIC("unreachable: get_password");
 }
 
 bool get_authorize_code(const std::string phone_number, std::time_t tp, std::string &code)
 {
-    std::cout << "Enter (SMS) code.." << std::endl;
-    std::cin >> code;
+    PANIC("unreachable: get_authorize_code");
     return false;
 }
 

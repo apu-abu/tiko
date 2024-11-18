@@ -136,6 +136,8 @@ public:
                      std::make_unique<Tiko::respond>(on_authorication_failed(client)))},
             };
             td_send(client->get_client_id(), data.dump().c_str());
+            logger::info("phone\3{}\2key\3{}\2msg\3{}",
+                         client->get_phone_number(), "send_sms_code", "");
         }
         else if (authorization_state["@type"] == "authorizationStateWaitRegistration")
         {
@@ -170,9 +172,13 @@ public:
                      std::make_unique<Tiko::respond>(on_authorication_failed(client)))},
             };
             td_send(client->get_client_id(), data.dump().c_str());
+            logger::info("phone\3{}\2key\3{}\2msg\3{}",
+                         client->get_phone_number(), "send_password", "");
         }
         else if (authorization_state["@type"] == "authorizationStateReady")
         {
+            logger::info("phone\3{}\2key\3{}\2msg\3{}",
+                         client->get_phone_number(), "login_success", "");
             client->set_authorized(true);
             on_login(client->get_phone_number());
         }

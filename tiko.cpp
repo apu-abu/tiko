@@ -46,14 +46,14 @@ int main(int argc, char *argv[])
         if (result != nullptr)
         {
             json rsp = json::parse(result);
-            std::cout << result << std::endl;
+            logger::info("key\3{}\2msg\3{}", "rcv_msg", result);
             if (rsp.contains("@client_id"))
             {
                 clients[rsp["@client_id"]]->receive(result);
             }
             else
             {
-                logger::info("ket\3{}\2msg\3{}", "msg_with_no_client", result);
+                logger::info("key\3{}\2msg\3{}", "msg_with_no_client", result);
             }
         }
     }
