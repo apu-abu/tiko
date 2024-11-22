@@ -118,7 +118,7 @@ void Tiko::response(const char *msg_cstr)
             {"@client_id", client_id_},
             {"@requset_id", reqid},
             {"@msg", "no respond was found"}};
-        logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+        logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                      get_phone_number(), "no_respond", log.dump());
         return;
     }

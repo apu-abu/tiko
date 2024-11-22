@@ -12,7 +12,7 @@ bool get_authorize_code(const std::string phone_number, std::time_t tp, std::str
 {
     std::cout << "Enter (SMS) code.." << std::endl;
     std::cin >> code;
-    return false;
+    return true;
 }
 
 void on_login(const std::string phone_number)

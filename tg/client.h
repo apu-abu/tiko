@@ -17,6 +17,8 @@ public:
     void set_authorized(bool authorized);
     void set_logout(bool logout);
     bool is_logout();
+    std::int64_t get_uid() { return uid_; };
+    void set_uid(std::int64_t uid) { uid_ = uid; };
     void send(const char *cmd);
     void receive(const char *update);
     std::int64_t set_respond(std::unique_ptr<respond> rspd);
@@ -27,6 +29,7 @@ private:
     std::unique_ptr<respond> get_respond(std::int64_t);
 
     std::string phone_number_;
+    std::int64_t uid_;
     int client_id_;
 
     bool is_authorized_{false};

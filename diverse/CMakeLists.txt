@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
-add_library(auto auto/8hao/authorize.cpp)
+add_library(auto auto/authorize.cpp)
 add_library(manual manual/authorize.cpp)
 add_library(natural authorize.cpp)
 

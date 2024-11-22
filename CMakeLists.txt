@@ -35,16 +35,17 @@ FetchContent_Declare(pqxx
     GIT_TAG 7.9.2
 )
 
-FetchContent_MakeAvailable(Td spdlog nlohmann_json httplib cli11 mpmcq pqxx)
+FetchContent_MakeAvailable(Td spdlog nlohmann_json httplib pqxx cli11 mpmcq)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
 add_executable(tiko tiko.cpp)
-add_executable(tgen register.cpp)
-add_executable(tie register.cpp)
+add_executable(tgen tgen.cpp)
+add_executable(tie tie.cpp)
 
 add_subdirectory(tg)
 add_subdirectory(diverse)
+add_subdirectory(dao)
 add_subdirectory(utils)
 
 target_link_libraries(tiko PRIVATE Td::TdJsonStatic)

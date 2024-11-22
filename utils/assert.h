@@ -1,3 +1,5 @@
+#include <iostream>
+
 #ifndef NDEBUG
 #define ASSERT(condition, message)                                             \
     do                                                                         \

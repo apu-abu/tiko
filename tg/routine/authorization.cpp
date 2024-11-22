@@ -4,6 +4,7 @@
 #include <td/telegram/td_json_client.h>
 
 #include "diverse/authorize.h"
+#include "dao/pet.h"
 #include "tg/client.h"
 #include "tg/routine.h"
 #include "utils/assert.h"
@@ -18,7 +19,7 @@ Tiko::respond on_authorication_failed(std::shared_ptr<Tiko> client)
         json msg = json::parse(msg_cstr);
         if (msg["@type"] == "error")
         {
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "authorication_failed", msg_cstr);
             json data = {"@type", "getAuthorizationState"};
             // to panic Error code: 400 message: "PHONE_NUMBER_BANNED"
@@ -29,7 +30,7 @@ Tiko::respond on_authorication_failed(std::shared_ptr<Tiko> client)
                     {"only_local", true},
                 };
                 td_send(client->get_client_id(), data.dump().c_str());
-                logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+                logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                              client->get_phone_number(), "account_is_banned", msg_cstr);
                 client->set_logout(true);
                 return;
@@ -77,7 +78,7 @@ public:
         }
         else if (authorization_state["@type"] == "authorizationStateWaitEmailAddress")
         {
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "wait_email_address", msg_cstr);
             PANIC("account shouldn't use email address");
             std::string email_address;
@@ -93,7 +94,7 @@ public:
         }
         else if (authorization_state["@type"] == "authorizationStateWaitEmailCode")
         {
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "wait_email_code", msg_cstr);
             PANIC("account shouldn't use email code");
             std::string code;
@@ -123,7 +124,7 @@ public:
                     {"only_local", true},
                 };
                 td_send(client->get_client_id(), data.dump().c_str());
-                logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+                logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                              client->get_phone_number(), "fetch_sms_code_failed", msg_cstr);
                 client->set_logout(true);
                 return;
@@ -136,12 +137,12 @@ public:
                      std::make_unique<Tiko::respond>(on_authorication_failed(client)))},
             };
             td_send(client->get_client_id(), data.dump().c_str());
-            logger::info("phone\3{}\2key\3{}\2msg\3{}",
+            logger::info("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "send_sms_code", "");
         }
         else if (authorization_state["@type"] == "authorizationStateWaitRegistration")
         {
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "register_accout", msg_cstr);
             PANIC("the account can't register in process.");
             std::cout << "first name.." << std::endl;
@@ -172,49 +173,51 @@ public:
                      std::make_unique<Tiko::respond>(on_authorication_failed(client)))},
             };
             td_send(client->get_client_id(), data.dump().c_str());
-            logger::info("phone\3{}\2key\3{}\2msg\3{}",
+            logger::info("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "send_password", "");
         }
         else if (authorization_state["@type"] == "authorizationStateReady")
         {
-            logger::info("phone\3{}\2key\3{}\2msg\3{}",
+            logger::info("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "login_success", "");
             client->set_authorized(true);
             on_login(client->get_phone_number());
+            json data = {"@type", "getMe"};
+            td_send(client->get_client_id(), data.dump().c_str());
         }
         else if (authorization_state["@type"] == "authorizationStateLoggingOut")
         {
             client->set_authorized(false);
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "rcv_logout_msg", msg_cstr);
             client->set_logout(true);
         }
         else if (authorization_state["@type"] == "authorizationStateClosing")
         {
             client->set_authorized(false);
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "rcv_closing_msg", msg_cstr);
             client->set_logout(true);
         }
         else if (authorization_state["@type"] == "authorizationStateClosed")
         {
             client->set_authorized(false);
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "rcv_closed_msg", msg_cstr);
             client->set_logout(true);
         }
         else
         {
-            logger::warn("phone\3{}\2key\3{}\2msg\3{}",
+            logger::warn("\2phone\3{}\2key\3{}\2msg\3{}",
                          client->get_phone_number(), "rcv_upexpected_authorization_msg", msg_cstr);
         }
     }
 };
 
-void init() __attribute__((constructor));
+void init_authorization() __attribute__((constructor));
 
-void init()
+void init_authorization()
 {
-    auto routine = std::make_shared<OnUpdateAuthorizationState>();
-    set_routine("updateAuthorizationState", std::move(routine));
+    auto updateAuthorizationState = std::make_shared<OnUpdateAuthorizationState>();
+    set_routine("updateAuthorizationState", std::move(updateAuthorizationState));
 }

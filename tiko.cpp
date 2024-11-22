@@ -8,6 +8,7 @@
 #include "tg/client.h"
 #include "tg/routine.h"
 #include "utils/logger.h"
+#include "utils/database.h"
 
 // Basic example of TDLib JSON interface usage.
 // Native interface should be preferred instead in C++, so here is only an example of
@@ -19,6 +20,9 @@ int main(int argc, char *argv[])
     logger::init_rotated_logger("tiko");
     logger::set_log_level(logger::level_enum::trace_level);
     logger::flush_every(std::chrono::seconds(1));
+
+    // if you want to use db, please set db connection first.
+    set_db_connection();
 
     std::string path = "storage";
     std::map<int, std::shared_ptr<Tiko>> clients;
@@ -33,7 +37,7 @@ int main(int argc, char *argv[])
 
     if (client_nums == 0)
     {
-        logger::error("key\3{}\2msg\3{}", "storage_is_empty", "");
+        logger::error("\2key\3{}\2msg\3{}", "storage_is_empty", "");
         std::exit(-1);
     }
 
@@ -46,14 +50,14 @@ int main(int argc, char *argv[])
         if (result != nullptr)
         {
             json rsp = json::parse(result);
-            logger::info("key\3{}\2msg\3{}", "rcv_msg", result);
+            logger::info("\2key\3{}\2msg\3{}", "rcv_msg", result);
             if (rsp.contains("@client_id"))
             {
                 clients[rsp["@client_id"]]->receive(result);
             }
             else
             {
-                logger::info("key\3{}\2msg\3{}", "msg_with_no_client", result);
+                logger::info("\2key\3{}\2msg\3{}", "msg_with_no_client", result);
             }
         }
     }
